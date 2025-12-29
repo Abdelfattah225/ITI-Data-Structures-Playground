@@ -1,4 +1,3 @@
-```markdown
 # Linked List Cheat Sheet 📝
 
 Quick reference for interview preparation.
