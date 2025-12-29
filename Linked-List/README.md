@@ -1,112 +1,216 @@
-# Linked List Implementation in C
+```markdown
+# Linked List Cheat Sheet 📝
 
-# Linked List
+Quick reference for interview preparation.
+
 ---
 
 ## 📁 Files
 
-| File | Description |
-|------|-------------|
-| `singly_linked_list.c` | Singly linked list implementation |
-| `doubly_linked_list.c` | Doubly linked list implementation |
+| File | Type |
+|------|------|
+| `singly_linked_list.c` | Linear, one direction |
+| `doubly_linked_list.c` | Linear, two directions |
+| `circular_singly_linked_list.c` | Circular, one direction |
+| `circular_doubly_linked_list.c` | Circular, two directions |
 
 ---
 
-## 🔗 Data Structures
+## 🔗 Visual Reference
 
-### Singly Linked List
 ```
-[data|next] -> [data|next] -> [data|next] -> NULL
-```
+SINGLY:           [10|→] → [20|→] → [30|→] → NULL
 
-### Doubly Linked List
-```
-NULL <- [prev|data|next] <-> [prev|data|next] <-> [prev|data|next] -> NULL
+DOUBLY:      NULL ← [←|10|→] ↔ [←|20|→] ↔ [←|30|→] → NULL
+
+CIRCULAR SINGLY:  [10|→] → [20|→] → [30|→] ─┐
+                    ↑________________________│
+
+CIRCULAR DOUBLY:  ┌─← [←|10|→] ↔ [←|20|→] ↔ [←|30|→] ←─┐
+                  └─→                               →──┘
 ```
 
 ---
 
-## ⚡ Operations
+## ⏱️ Time Complexity
 
-| Operation | Singly | Doubly |
-|-----------|--------|--------|
-| Insert at beginning | ✅ O(1) | ✅ O(1) |
-| Insert at end | ✅ O(n) | ✅ O(n) |
-| Insert at position | ✅ O(n) | ✅ O(n) |
-| Insert sorted | ✅ O(n) | ❌ |
-| Delete from beginning | ✅ O(1) | ✅ O(1) |
-| Delete from end | ✅ O(n) | ✅ O(1)* |
-| Delete by value | ✅ O(n) | ✅ O(n) |
-| Delete at position | ✅ O(n) | ❌ |
-| Search | ✅ O(n) | ❌ |
-| Get length | ✅ O(n) | ✅ O(n) |
-| Get middle | ✅ O(n) | ❌ |
-| Reverse | ✅ O(n) | ✅ O(n) |
-| Print forward | ✅ O(n) | ✅ O(n) |
-| Print backward | ❌ | ✅ O(n) |
+| Operation | SLL | DLL | CSLL | CDLL |
+|-----------|:---:|:---:|:----:|:----:|
+| Insert at head | O(1) | O(1) | O(n) | O(1) |
+| Insert at tail | O(n) | O(n) | O(n) | O(1) |
+| Delete at head | O(1) | O(1) | O(n) | O(1) |
+| Delete at tail | O(n) | O(1) | O(n) | O(1) |
+| Search | O(n) | O(n) | O(n) | O(n) |
 
-*\*With tail pointer*
+> **CDLL wins** for insert/delete at both ends!
 
 ---
 
-## 🚀 Quick Start
+## 🧠 Key Concepts
 
-### Compile & Run
-
-```bash
-# Singly Linked List
-gcc singly_linked_list.c -o sll
-./sll
-
-# Doubly Linked List
-gcc doubly_linked_list.c -o dll
-./dll
-```
-
-### Basic Usage
-
+### Node Structure
 ```c
 // Singly
-struct Node* head = NULL;
-insertAtEnd(&head, 10);
-insertAtEnd(&head, 20);
-printList(head);          // 10 -> 20 -> NULL
+struct Node {
+    int data;
+    struct Node *next;
+};
 
 // Doubly
-struct DNode* head = NULL;
-insertAtEndD(&head, 10);
-insertAtEndD(&head, 20);
-printForward(head);       // 10 <-> 20 <-> NULL
+struct DNode {
+    int data;
+    struct DNode *next;
+    struct DNode *prev;
+};
+```
+
+### Empty List Check
+```c
+if (head == NULL)  // All types
+```
+
+### Single Node Check
+```c
+// Linear
+if (head->next == NULL)
+
+// Circular
+if (head->next == head)
+```
+
+### Find Tail
+```c
+// Linear Singly - O(n)
+while (curr->next != NULL)
+    curr = curr->next;
+
+// Circular Singly - O(n)
+while (curr->next != head)
+    curr = curr->next;
+
+// Circular Doubly - O(1)
+tail = head->prev;
+```
+
+### Traversal Pattern
+```c
+// Linear
+while (curr != NULL) {
+    // process
+    curr = curr->next;
+}
+
+// Circular (use do-while!)
+do {
+    // process
+    curr = curr->next;
+} while (curr != head);
 ```
 
 ---
 
-## 🆚 When to Use?
+## 🔑 Interview Tips
 
-| Use Singly When | Use Doubly When |
-|-----------------|-----------------|
-| Memory is limited | Need backward traversal |
-| Only forward traversal needed | Frequent delete from end |
-| Simpler implementation preferred | Need to delete a node given only its pointer |
+### Common Operations to Know
+
+1. **Reverse a linked list**
+2. **Find middle element** (slow/fast pointer)
+3. **Detect cycle** (Floyd's algorithm)
+4. **Merge two sorted lists**
+5. **Remove nth node from end**
+
+### Edge Cases to Handle
+
+- ✅ Empty list (`head == NULL`)
+- ✅ Single node
+- ✅ Two nodes
+- ✅ Operation on head/tail
+- ✅ Value not found (for search/delete)
+
+### Common Mistakes to Avoid
+
+- ❌ Forgetting to update `head` after deletion
+- ❌ Not handling empty list
+- ❌ Memory leaks (forgetting `free()`)
+- ❌ Infinite loop in circular lists
+- ❌ Losing reference to nodes during pointer manipulation
 
 ---
 
-## 📊 Memory Comparison
+## 🆚 When to Use What?
 
-| Type | Memory per Node |
-|------|-----------------|
-| Singly | `data` + 1 pointer |
-| Doubly | `data` + 2 pointers |
+| Type | Use When |
+|------|----------|
+| **Singly** | Simple stack/queue, memory limited |
+| **Doubly** | Need backward traversal, browser history |
+| **Circular Singly** | Round-robin scheduling, circular buffer |
+| **Circular Doubly** | Music playlist, undo/redo with wrap-around |
 
 ---
 
-## 🧪 Sample Output
+## 💾 Memory Per Node
+
+| Type | Size |
+|------|------|
+| Singly | `data` + 1 pointer (8 bytes on 64-bit) |
+| Doubly | `data` + 2 pointers (16 bytes on 64-bit) |
+
+---
+
+## ⚡ Quick Code Patterns
+
+### Insert at Beginning (Singly)
+```c
+newNode->next = head;
+head = newNode;
+```
+
+### Insert at Beginning (Circular Doubly)
+```c
+newNode->next = head;
+newNode->prev = head->prev;  // tail
+head->prev->next = newNode;  // tail->next = new
+head->prev = newNode;
+head = newNode;
+```
+
+### Delete from Beginning (Singly)
+```c
+temp = head;
+head = head->next;
+free(temp);
+```
+
+### Delete from End (Circular Doubly)
+```c
+tail = head->prev;
+tail->prev->next = head;
+head->prev = tail->prev;
+free(tail);
+```
+
+---
+
+## 🧪 Compile & Test
+
+```bash
+gcc singly_linked_list.c -o sll && ./sll
+gcc doubly_linked_list.c -o dll && ./dll
+gcc circular_singly_linked_list.c -o csll && ./csll
+gcc circular_doubly_linked_list.c -o cdll && ./cdll
+```
+
+---
+
+## 📌 Remember!
 
 ```
-Original list: 10 -> 20 -> 30 -> 40 -> 50 -> NULL
-Length: 5
-Middle element: 30
-Reversed list: 50 -> 40 -> 30 -> 20 -> 10 -> NULL
+┌─────────────────────────────────────────────────┐
+│  Linear → ends with NULL                        │
+│  Circular → ends point back to head             │
+│  Singly → only next pointer                     │
+│  Doubly → both prev and next pointers           │
+│                                                 │
+│  CDLL = O(1) for both head AND tail operations! │
+└─────────────────────────────────────────────────┘
 ```
-
----
