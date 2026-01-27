@@ -1,0 +1,28 @@
+# undirected
+
+int find(V){
+    if(root[V] != v){
+        root[v] = find(root[v])       
+    }
+    return root[v]
+}
+
+ex: root(1) = 1,
+ex: root(2) = 1,
+ex: root(3) = 1,
+ex: root(4) = 1,
+find(1) = return root(1) = 1;
+find(2) = {
+    root[2] = find(root[2]) ...
+     ;
+}
+
+int union(u,v){
+    rootu = find(u);
+    rootv = find(v);
+    if(rootu == rootv){
+        return 1;
+    }
+    /// merge ///
+    parent[rootu] = rootv;
+}
